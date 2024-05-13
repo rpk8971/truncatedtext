@@ -1,0 +1,55 @@
+import { useState, useEffect, useRef } from "react";
+
+function TruncatedText({ text, open, setOpen, setText }) {
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    const textElement = textRef.current;
+    if (textElement) {
+      setIsTruncated(
+        textElement.offsetWidth < textElement.scrollWidth ||
+          textElement.offsetHeight < textElement.scrollHeight
+      );
+    }
+  }, [text]);
+
+  const handleClick = () => {
+    setOpen(!open);
+    setText(text);
+  };
+
+  return (
+    <>
+      <div
+        style={{
+          fontSize: "13px",
+          width: "160px",
+          overflow: "hidden", // Add overflow property
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          //   cursor: "pointer",
+          wordBreak: "break-all",
+        }}
+        ref={textRef}
+        // onClick={() => {
+        //   handleClick();
+        // }}
+      >
+        {text}
+      </div>
+      {isTruncated && (
+        <span
+          style={{ color: "blue", cursor: "pointer", fontSize: "6px" }}
+          onClick={() => {
+            handleClick();
+          }}
+        >
+          View more
+        </span>
+      )}
+    </>
+  );
+}
+
+export default TruncatedText;
